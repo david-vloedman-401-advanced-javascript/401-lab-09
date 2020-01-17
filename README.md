@@ -1,4 +1,4 @@
-# LAB - 08
+# LAB - 09
 
 ## API Server
 
@@ -6,8 +6,8 @@
 
 ### Links and Resources
 
-* [submission PR](https://github.com/david-vloedman-401-advanced-javascript/401-lab-08/pull/1)
-* [travis](https://www.travis-ci.com/david-vloedman-401-advanced-javascript/401-lab-08)
+* [submission PR](https://github.com/david-vloedman-401-advanced-javascript/401-lab-09/pull/1)
+* [travis](https://www.travis-ci.com/david-vloedman-401-advanced-javascript/401-lab-09)
 * [heroku](https://serene-bayou-78571.herokuapp.com/)
 
 
@@ -31,4 +31,4 @@
 
 #### UML
 
-![](./assets/lab08.png)
+![](./assets/lab09.png)
