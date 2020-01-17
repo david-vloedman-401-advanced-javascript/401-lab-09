@@ -12,19 +12,32 @@ const products = new Products();
 const errorHandler = require('../middleware/error.js');
 const notFound = require('../middleware/404.js');
 
+function getModel(req,res, next){
+  const model = req.params.model;
+  switch (model) {
+  case 'products':
+    req.model = products;
+    next();
+    return;
+  case 'categories':
+    req.model = categories;
+    next();
+    return;
+  default:
+    req.model = 'Invalid Model';
+    next();
+    return;
+  }
+}
 
+router.param('model', getModel);
 
-router.get('/api/v1/categories', getCategories);
-router.post('/api/v1/categories', postCategories);
-router.get('/api/v1/categories/:id', getCategory);
-router.put('/api/v1/categories/:id', putCategories);
-router.delete('/api/v1/categories/:id', deleteCategories);
+router.get('/api/v1/:model', handleGetAll);
+router.post('/api/v1/:model', handlePost);
+router.get('/api/v1/:model/:id', handleGetOne);
+router.put('/api/v1/:model/:id', handlePut);
+router.delete('/api/v1/:model/:id', handleDelete);
 
-router.get('/api/v1/products', getProducts);
-router.post('/api/v1/products', postProducts);
-router.get('/api/v1/products/:id', getProduct);
-router.put('/api/v1/products/:id', putProducts);
-router.delete('/api/v1/products/:id', deleteProducts);
 
 router.use(notFound);
 router.use(errorHandler);
@@ -34,9 +47,9 @@ router.use(errorHandler);
  * @param {*} response 
  * @param {*} next 
  */
-function getProducts(request, response, next) {
+function handleGetAll(request, response, next) {
   // expects an array of objects back
-  products
+  request.model
     .get()
     .then(data => {
       const output = {
@@ -53,11 +66,11 @@ function getProducts(request, response, next) {
  * @param {*} response 
  * @param {*} next 
  */
-function getProduct(request, response, next) {
+function handleGetOne(request, response, next) {
   // expects an array with one object in it
-  products
+  request.model
     .get(request.params.id)
-    .then(result => response.status(200).json(result[0]))
+    .then(result => response.status(200).json(result))
     .catch(next);
 }
 /**
@@ -66,9 +79,9 @@ function getProduct(request, response, next) {
  * @param {*} response 
  * @param {*} next 
  */
-function postProducts(request, response, next) {
+function handlePost(request, response, next) {
   
-  products    
+  request.model
     .post(request.body)
     .then(result => response.status(200).json(result))
     .catch(next);
@@ -79,9 +92,9 @@ function postProducts(request, response, next) {
  * @param {*} response 
  * @param {*} next 
  */
-function putProducts(request, response, next) {
+function handlePut(request, response, next) {
   // expects the record that was just updated in the database
-  products
+  request.model
     .put(request.params.id, request.body)
     .then(result => response.status(200).json(result))
     .catch(next);
@@ -92,89 +105,14 @@ function putProducts(request, response, next) {
  * @param {*} response 
  * @param {*} next 
  */
-function deleteProducts(request, response, next) {
+function handleDelete(request, response, next) {
   // Expects no return value (the resource should be gone)
-  products
+  request.model
     .delete(request.params.id)
     .then(result => response.status(200).json(result))
     .catch(next);
 }
 
 
-/**
- * 
- * @param {*} request 
- * @param {*} response 
- * @param {*} next 
- */
-function getCategories(request, response, next) {
-  // expects an array of object to be returned from the model
-
-  categories
-    .get()
-    .then(data => {
-      const output = {
-        count: data.length,
-        results: data,
-      };
-      response.status(200).json(output);
-    })
-    .catch(next);
-}
-/**
- * 
- * @param {*} request 
- * @param {*} response 
- * @param {*} next 
- */
-function getCategory(request, response, next) {
-  // expects an array with the one matching record from the model
-
-  
-  categories
-    .get(request.params.id)
-    .then(result => response.status(200).json(result))
-    .catch(next);
-}
-/**
- * 
- * @param {*} request 
- * @param {*} response 
- * @param {*} next 
- */
-function postCategories(request, response, next) {
-  // expects the record that was just added to the database
-  console.log('request',request.body);
-  categories
-    .post(request.body)
-    .then(result => response.status(200).json(result))
-    .catch(next);
-}
-/**
- * 
- * @param {*} request 
- * @param {*} response 
- * @param {*} next 
- */
-function putCategories(request, response, next) {
-  // expects the record that was just updated in the database
-  categories
-    .put(request.params.id, request.body)
-    .then(result => response.status(200).json(result))
-    .catch(next);
-}
-/**
- * 
- * @param {*} request 
- * @param {*} response 
- * @param {*} next 
- */
-function deleteCategories(request, response, next) {
-  // Expects no return value (resource was deleted)
-  categories
-    .delete(request.params.id)
-    .then(result => response.status(200).json(result))
-    .catch(next);
-}
 
 module.exports = router;
