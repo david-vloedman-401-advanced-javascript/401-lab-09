@@ -12,6 +12,8 @@ const products = new Products();
 const errorHandler = require('../middleware/error.js');
 const notFound = require('../middleware/404.js');
 
+
+
 router.get('/api/v1/categories', getCategories);
 router.post('/api/v1/categories', postCategories);
 router.get('/api/v1/categories/:id', getCategory);

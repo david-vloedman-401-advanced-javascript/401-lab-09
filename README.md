@@ -6,9 +6,9 @@
 
 ### Links and Resources
 
-* [submission PR](https://github.com/david-vloedman-401-advanced-javascript/401-lab-08/pull/1)
-* [travis](https://www.travis-ci.com/david-vloedman-401-advanced-javascript/401-lab-08)
-* [heroku](https://serene-bayou-78571.herokuapp.com/)
+* [submission PR](https://github.com/david-vloedman-401-advanced-javascript/401-lab-09/pull/1)
+* [travis](https://www.travis-ci.com/david-vloedman-401-advanced-javascript/401-lab-09)
+* [heroku](https://still-citadel-12065.herokuapp.com/)
 
 
 
