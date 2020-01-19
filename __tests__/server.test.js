@@ -6,7 +6,7 @@ const mockRequest = supergoose(server);
 
 describe('Product API', ()=>{
   it('can post a new product', ()=>{
-    let obj = {name: 'david', amount: 1};
+    let obj = {name: 'david', amount: 1, category_id: 'people'};
     return mockRequest.post('/api/v1/products')
       .send(obj)
       .then(data => {
@@ -37,8 +37,8 @@ describe('Product API', ()=>{
   });
 
   it('can update a record', ()=>{
-    const obj = {name: 'TumTum', amount: 4};
-    const updated = {name: 'NoTumTum', amount: 4};
+    const obj = {name: 'TumTum', amount: 4, category_id: 'tummies'};
+    const updated = {name: 'NoTumTum', amount: 4, category_id: 'tummies'};
     return mockRequest
       .post('/api/v1/products')
       .send(obj)
@@ -53,7 +53,7 @@ describe('Product API', ()=>{
   });
 
   it('can delete a record', ()=> {
-    const obj = {name: 'TumTum', amount: 6 };
+    const obj = {name: 'TumTum', amount: 6 , category_id: 'tummies'};
     return mockRequest
       .post('/api/v1/products')
       .send(obj)

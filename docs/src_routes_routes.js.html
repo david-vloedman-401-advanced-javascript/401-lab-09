@@ -40,17 +40,32 @@ const products = new Products();
 const errorHandler = require('../middleware/error.js');
 const notFound = require('../middleware/404.js');
 
-router.get('/api/v1/categories', getCategories);
-router.post('/api/v1/categories', postCategories);
-router.get('/api/v1/categories/:id', getCategory);
-router.put('/api/v1/categories/:id', putCategories);
-router.delete('/api/v1/categories/:id', deleteCategories);
+function getModel(req,res, next){
+  const model = req.params.model;
+  switch (model) {
+  case 'products':
+    req.model = products;
+    next();
+    return;
+  case 'categories':
+    req.model = categories;
+    next();
+    return;
+  default:
+    req.model = 'Invalid Model';
+    next();
+    return;
+  }
+}
 
-router.get('/api/v1/products', getProducts);
-router.post('/api/v1/products', postProducts);
-router.get('/api/v1/products/:id', getProduct);
-router.put('/api/v1/products/:id', putProducts);
-router.delete('/api/v1/products/:id', deleteProducts);
+router.param('model', getModel);
+
+router.get('/api/v1/:model', handleGetAll);
+router.post('/api/v1/:model', handlePost);
+router.get('/api/v1/:model/:id', handleGetOne);
+router.put('/api/v1/:model/:id', handlePut);
+router.delete('/api/v1/:model/:id', handleDelete);
+
 
 router.use(notFound);
 router.use(errorHandler);
@@ -60,9 +75,9 @@ router.use(errorHandler);
  * @param {*} response 
  * @param {*} next 
  */
-function getProducts(request, response, next) {
+function handleGetAll(request, response, next) {
   // expects an array of objects back
-  products
+  request.model
     .get()
     .then(data => {
       const output = {
@@ -79,11 +94,11 @@ function getProducts(request, response, next) {
  * @param {*} response 
  * @param {*} next 
  */
-function getProduct(request, response, next) {
+function handleGetOne(request, response, next) {
   // expects an array with one object in it
-  products
+  request.model
     .get(request.params.id)
-    .then(result => response.status(200).json(result[0]))
+    .then(result => response.status(200).json(result))
     .catch(next);
 }
 /**
@@ -92,9 +107,9 @@ function getProduct(request, response, next) {
  * @param {*} response 
  * @param {*} next 
  */
-function postProducts(request, response, next) {
+function handlePost(request, response, next) {
   
-  products    
+  request.model
     .post(request.body)
     .then(result => response.status(200).json(result))
     .catch(next);
@@ -105,9 +120,9 @@ function postProducts(request, response, next) {
  * @param {*} response 
  * @param {*} next 
  */
-function putProducts(request, response, next) {
+function handlePut(request, response, next) {
   // expects the record that was just updated in the database
-  products
+  request.model
     .put(request.params.id, request.body)
     .then(result => response.status(200).json(result))
     .catch(next);
@@ -118,90 +133,15 @@ function putProducts(request, response, next) {
  * @param {*} response 
  * @param {*} next 
  */
-function deleteProducts(request, response, next) {
+function handleDelete(request, response, next) {
   // Expects no return value (the resource should be gone)
-  products
+  request.model
     .delete(request.params.id)
     .then(result => response.status(200).json(result))
     .catch(next);
 }
 
 
-/**
- * 
- * @param {*} request 
- * @param {*} response 
- * @param {*} next 
- */
-function getCategories(request, response, next) {
-  // expects an array of object to be returned from the model
-
-  categories
-    .get()
-    .then(data => {
-      const output = {
-        count: data.length,
-        results: data,
-      };
-      response.status(200).json(output);
-    })
-    .catch(next);
-}
-/**
- * 
- * @param {*} request 
- * @param {*} response 
- * @param {*} next 
- */
-function getCategory(request, response, next) {
-  // expects an array with the one matching record from the model
-
-  
-  categories
-    .get(request.params.id)
-    .then(result => response.status(200).json(result))
-    .catch(next);
-}
-/**
- * 
- * @param {*} request 
- * @param {*} response 
- * @param {*} next 
- */
-function postCategories(request, response, next) {
-  // expects the record that was just added to the database
-  console.log('request',request.body);
-  categories
-    .post(request.body)
-    .then(result => response.status(200).json(result))
-    .catch(next);
-}
-/**
- * 
- * @param {*} request 
- * @param {*} response 
- * @param {*} next 
- */
-function putCategories(request, response, next) {
-  // expects the record that was just updated in the database
-  categories
-    .put(request.params.id, request.body)
-    .then(result => response.status(200).json(result))
-    .catch(next);
-}
-/**
- * 
- * @param {*} request 
- * @param {*} response 
- * @param {*} next 
- */
-function deleteCategories(request, response, next) {
-  // Expects no return value (resource was deleted)
-  categories
-    .delete(request.params.id)
-    .then(result => response.status(200).json(result))
-    .catch(next);
-}
 
 module.exports = router;</code></pre>
         </article>
@@ -213,13 +153,13 @@ module.exports = router;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Categories.html">Categories</a></li><li><a href="Model.html">Model</a></li><li><a href="Product.html">Product</a></li></ul><h3>Global</h3><ul><li><a href="global.html#deleteCategories">deleteCategories</a></li><li><a href="global.html#deleteProducts">deleteProducts</a></li><li><a href="global.html#getCategories">getCategories</a></li><li><a href="global.html#getCategory">getCategory</a></li><li><a href="global.html#getProduct">getProduct</a></li><li><a href="global.html#getProducts">getProducts</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#postCategories">postCategories</a></li><li><a href="global.html#postProducts">postProducts</a></li><li><a href="global.html#putCategories">putCategories</a></li><li><a href="global.html#putProducts">putProducts</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Categories.html">Categories</a></li><li><a href="Model.html">Model</a></li><li><a href="Product.html">Product</a></li></ul><h3>Global</h3><ul><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#handleGetAll">handleGetAll</a></li><li><a href="global.html#handleGetOne">handleGetOne</a></li><li><a href="global.html#handlePost">handlePost</a></li><li><a href="global.html#handlePut">handlePut</a></li><li><a href="global.html#join">join</a></li><li><a href="global.html#mongoose">mongoose</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Jan 16 2020 15:40:36 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sun Jan 19 2020 11:00:01 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

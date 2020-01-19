@@ -1,13 +1,36 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const products = require('./productSchema');
 
 const categories = new mongoose.Schema({  
   category_id: { type: String, required: true},
   price: { type: Number, required: true },
   weight: { type: Number, required: true },
   quantity_in_stock: { type: Number, required: true },
+  
+},
+{toObject: {virtuals: true}, toJSON: {virtuals: true}},
+);
+
+categories.virtual('products', {
+  ref: products,
+  localField: 'category_id',
+  foreignField: 'category_id',  
+  
 });
+/**
+ * 
+ */
+function join(){
+  try {
+    this.populate('products');
+  }
+  catch (e) {console.log(e);}
+}
+
+categories.pre('find', join);
+categories.pre('findOne', join);
 /**
  * @function 
  */

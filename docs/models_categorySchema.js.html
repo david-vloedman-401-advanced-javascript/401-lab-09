@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: __tests__/supergoose.js</title>
+    <title>JSDoc: Source: models/categorySchema.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: __tests__/supergoose.js</h1>
+    <h1 class="page-title">Source: models/categorySchema.js</h1>
 
     
 
@@ -27,46 +27,60 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
-/**
- * Combines SuperTest and Mongoose Memory Server
- * to reduce (hopefully) the pain of
- * testing a Mongoose API
- */
 
 const mongoose = require('mongoose');
-const { default: MongoMemoryServer } = require('mongodb-memory-server');
-module.exports = require('supertest');
+const products = require('./productSchema');
 
-let mongoServer;
+const categories = new mongoose.Schema({  
+  category_id: { type: String, required: true},
+  price: { type: Number, required: true },
+  weight: { type: Number, required: true },
+  quantity_in_stock: { type: Number, required: true },
+  
+},
+{toObject: {virtuals: true}, toJSON: {virtuals: true}},
+);
 
-async function startDB() {
-  mongoServer = new MongoMemoryServer();
-
-  const mongoUri = await mongoServer.getConnectionString();
-
-  const mongooseOptions = {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-  };
-
-  await mongoose.connect(mongoUri, mongooseOptions);
+categories.virtual('products', {
+  ref: products,
+  localField: 'category_id',
+  foreignField: 'category_id',  
+  
+});
+/**
+ * 
+ */
+function join(){
+  try {
+    this.populate('products');
+  }
+  catch (e) {console.log(e);}
 }
 
-async function stopDB() {
-  await mongoose.disconnect();
-  mongoServer &amp;&amp; await mongoServer.stop();
-}
+categories.pre('find', join);
+categories.pre('findOne', join);
+/**
+ * @function 
+ */
+categories.post('findOne', rec => {
+  console.log(`Record found ${rec}`);
+});
 
-beforeAll(startDB);
-afterAll(stopDB);
+/**
+ * @function 
+ */
+categories.post('find', () => {
+  console.log(`Record not found`);
+});
 
-if (!module.parent) {
-  describe('supergoose', () => {
-    it('can connect', async () => {
-      expect(mongoose.connection.db).toBeDefined();
-    });
-  });
-}</code></pre>
+/**
+ * @function 
+ */
+categories.post('save', () => {
+  console.log('Record saved');
+});
+module.exports = mongoose.model('categories', categories);
+</code></pre>
         </article>
     </section>
 

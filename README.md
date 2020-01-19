@@ -8,9 +8,7 @@
 
 * [submission PR](https://github.com/david-vloedman-401-advanced-javascript/401-lab-09/pull/1)
 * [travis](https://www.travis-ci.com/david-vloedman-401-advanced-javascript/401-lab-09)
-* [heroku](https://serene-bayou-78571.herokuapp.com/)
-
-
+* [heroku](https://lab10-api.herokuapp.com/)
 
 #### Documentation
 
@@ -31,4 +29,4 @@
 
 #### UML
 
-![](./assets/lab09.png)
+![](./assets/lab-08.png)

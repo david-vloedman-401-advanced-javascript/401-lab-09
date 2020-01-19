@@ -1,13 +1,13 @@
 {
-  "OpenAPI": "3.0.1",
+  "swagger":2.0,
   "info": {
     "title": "Core API",
-    "description": "Shoes and Fruits",
+    "description": "Products and Categories",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "http://localhost:3000/"
+      "url": "https://lab10-api.herokuapp.com/api/v1"
     }
   ],
   "paths": {
